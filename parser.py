@@ -22,11 +22,13 @@ class Handler(BaseHTTPRequestHandler):
         self.content_disposition = None
         self.profile_web_page_url = None
         self.user_agent = None
-        self.magic_number = 'jynb'  # 记得修改此处幻数
+        # 从环境变量读取幻数,默认值为 'jynb'
+        self.magic_number = os.environ.get('MAGIC_NUMBER', 'jynb')
         super().__init__(*args, **kwargs)
 
     def log_message(self, format, *args):
         # 覆盖此方法以避免在控制台记录每个请求
+        # logging.info("%s - - [%s] %s\n" % (self.client_address[0], self.log_date_time_string(), format % args))
         pass
 
     @staticmethod
@@ -296,7 +298,7 @@ class Handler(BaseHTTPRequestHandler):
         :return: 解析后的URL
         :rtype: str
         """
-        file_path = ['../' + file_name, './' + file_name]
+        file_path = ['./conf/' + file_name]
 
         for file in file_path:
             try:
@@ -334,7 +336,7 @@ class Handler(BaseHTTPRequestHandler):
         :return: 解析后的URL
         :rtype: str
         """
-        file_path = ['../' + file_name, './' + file_name]
+        file_path = ['./conf/' + file_name]
 
         for file in file_path:
             try:
@@ -373,7 +375,7 @@ class Handler(BaseHTTPRequestHandler):
         :return: 文件内容的yaml对象
         :rtype: yaml object
         """
-        file_path = ['../' + file_name, './' + file_name]
+        file_path = ['./conf/' + file_name]
 
         for file in file_path:
             try:
@@ -512,7 +514,7 @@ class Handler(BaseHTTPRequestHandler):
 
 
 def run_server(server_class=HTTPServer, handler_class=Handler, port=8000):
-    server_address = ('127.0.0.1', port)
+    server_address = ('0.0.0.0', port)
     httpd = server_class(server_address, handler_class)
     logging.info(f"Starting HTTP server on port {port}")
     httpd.serve_forever()

@@ -64,7 +64,62 @@ Scenario 3
 
 ## Deployment Instructions
 
-#### Server Deployment
+### Docker Deployment (Recommended)
+
+1. Using docker compose (Recommended)
+```yaml
+# docker-compose.yml
+version: '3'
+services:
+  parser:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - MAGIC_NUMBER=your_magic_number # Set your magic number
+    volumes:
+      - ./conf:/app/conf  # Mount configuration directory
+    restart: unless-stopped
+```
+
+Start:
+```bash
+docker compose up -d
+```
+
+2. Using docker directly
+
+Build:
+```bash
+docker build -t clash-parser .
+```
+
+Run:
+```bash
+docker run -d \
+  -p 8000:8000 \
+  -e MAGIC_NUMBER=your_magic_number \
+  -v $(pwd)/conf:/app/conf \
+  clash-parser
+```
+
+#### Configuration
+
+1. Environment Variables
+- MAGIC_NUMBER: Set magic number, default is 'jynb'
+
+2. Configuration Directory
+- Put configuration files in ./conf directory
+- Supported configuration files:
+  - source.txt/source.json: Subscription source configuration
+  - parser.yaml: Parser configuration  
+  - mixin.yaml: Mixin configuration
+
+3. Access Service
+- Service runs at http://localhost:8000/api
+- Usage is same as original version
+
+### Server Deployment
 
 Clone this repository to the server.
 
@@ -88,7 +143,7 @@ It is recommended to use a reverse proxy such as NGINX for TLS encryption, modif
 You should pay attention to protecting your source.txt and other files from external access. These files can be placed in the upper directory.
 
 
-#### Serverless Deployment
+### Serverless Deployment
 
 You can also easily deploy this application on a serverless platform such as Vercel.
 
@@ -310,7 +365,62 @@ The document may not be updated in time, please feel free to ask questions if yo
 
 ## 部署说明
 
-#### 服务器部署
+### Docker 部署 (推荐)
+
+1. 使用 docker compose (推荐)
+```yaml
+# docker-compose.yml
+version: '3'
+services:
+  parser:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - MAGIC_NUMBER=your_magic_number # 设置你的幻数
+    volumes:
+      - ./conf:/app/conf  # 挂载配置目录
+    restart: unless-stopped
+```
+
+启动:
+```bash
+docker compose up -d
+```
+
+2. 直接使用 docker
+
+构建:
+```bash
+docker build -t clash-parser .
+```
+
+运行:
+```bash
+docker run -d \
+  -p 8000:8000 \
+  -e MAGIC_NUMBER=your_magic_number \
+  -v $(pwd)/conf:/app/conf \
+  clash-parser
+```
+
+#### 配置说明
+
+1. 环境变量
+- MAGIC_NUMBER: 设置幻数,默认为 'jynb'
+
+2. 配置文件目录
+- 将配置文件放在 ./conf 目录下
+- 支持的配置文件:
+  - source.txt/source.json: 订阅源配置
+  - parser.yaml: parser 配置
+  - mixin.yaml: mixin 配置
+
+3. 访问服务
+- 服务运行在 http://localhost:8000/api
+- 使用方式与原版相同
+
+### 常规服务器部署
 
 克隆本仓库到服务器。
 
@@ -333,7 +443,7 @@ python3 parser.py
 
 你应该注意保护你的 source.txt 等文件不可被外部访问，这些文件可以放在上层目录。
 
-#### 无服务器部署
+### 无服务器部署
 
 你也可以轻松地在如 Vercel 这样的无服务器平台上部署此应用。
 
